@@ -277,16 +277,30 @@ bool circleCircleCollision(Object* o1, Object* o2)//circle vs circle collision
 	
 	if (o1->isStatic) 
 	{
+		Vector2 vel = o2->getVelocity();
+		
 		o2->position += normal * -depth;
+		
+		o2->setVelocity(vel);
 	}
 	else if (o2->isStatic) 
 	{
+		Vector2 vel = o1->getVelocity();
+		
 		o1->position += normal * depth;
+		
+		o1->setVelocity(vel);
 	}
 	else 
 	{
+		Vector2 vel1 = o1->getVelocity();
+		Vector2 vel2 = o2->getVelocity();
+
 		o1->position += normal * depth * 0.5f;
 		o2->position += normal * depth * -0.5f;
+		
+		o1->setVelocity(vel1);
+		o2->setVelocity(vel2);
 	}
 
 	resolveCollision(o1,o2,normal);
@@ -389,20 +403,34 @@ bool polygonPolygonCollision(Object* o1, Object* o2, Vector2 &normal) //SAT coll
 	//moving objects
 	if (o1->isStatic) //static objects dont move so full depth of penetration is applied to non static object
 	{
+		Vector2 vel = o2->getVelocity();
+
 		o2->position += (normal * -depth);
 		o2->movePos(normal * -depth);
+		
+		o2->setVelocity(vel);
 	}
 	else if (o2->isStatic) 
 	{
+		Vector2 vel = o1->getVelocity();
+		
 		o1->position += (normal * depth);
 		o1->movePos(normal * depth);
+		
+		o1->setVelocity(vel);
 	}
 	else
 	{
+		Vector2 vel1 = o1->getVelocity();
+		Vector2 vel2 = o2->getVelocity();
+		
 		o1->position += (normal * depth / 2);
 		o1->movePos(normal * depth / 2);//move pos moves the objects vertices
 		o2->position += (normal * depth / -2);
 		o2->movePos(normal * depth / -2);
+
+		o1->setVelocity(vel1);
+		o2->setVelocity(vel2);
 	}
 
 
@@ -513,18 +541,32 @@ bool circlePolygonCollision(Object* o1, Object* o2)
 	//moving objects
 	if (o1->isStatic) //static objects dont move so full depth of penetration is applied to non static object
 	{
+		Vector2 vel = o2->getVelocity();
+
 		o2->position += (normal * -depth);
 		o2->movePos(normal * -depth);
+
+		o2->setVelocity(vel);
 	}
 	else if (o2->isStatic)
 	{
+		Vector2 vel = o1->getVelocity();
+		
 		o1->position += (normal * depth);
+
+		o1->setVelocity(vel);
 	}
 	else
 	{
+		Vector2 vel1 = o1->getVelocity();
+		Vector2 vel2 = o2->getVelocity();
+
 		o1->position += (normal * depth / 2);
 		o2->position += (normal * depth / -2);
 		o2->movePos(normal * depth / -2);
+
+		o1->setVelocity(vel1);
+		o2->setVelocity(vel2);
 	}
 
 	Vector2 contact = findCirclePolygonContactPoints(o1,o2);
